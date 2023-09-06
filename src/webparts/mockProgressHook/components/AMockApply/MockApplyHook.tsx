@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
-
-import { ProgressIndicator } from 'office-ui-fabric-react/lib/ProgressIndicator';
+import { useState, } from 'react';
 
 import { provisionMockList } from './MockProvision';
+import { commmonButtons, commonProgress, commonRows } from './CommonCode';
 
 require ('./MockApply.css');
 
@@ -12,6 +11,7 @@ export interface IMyProgress {
     time: string;
     logLabel: string;
     label: string;
+    rowLabel: string;
     description: string;
     percentComplete?: number;
     progressHidden?: boolean;
@@ -20,7 +20,7 @@ export interface IMyProgress {
     ref?: string;
     refElement?: any;
   }
-  
+
 
 export interface IMockApplyHookProps {
 
@@ -39,7 +39,7 @@ const MockApplyHook: React.FC<IMockApplyHookProps> = ( props ) => {
    *                                                                            
    */
 
-  const [ fields, setFields ] = useState<IMyProgress[]>( [] );
+  const [ fieldsX, setFieldsX ] = useState<IMyProgress[]>( [] );
   const [ total, setTotal ] = useState<number>( 0 );
   const [ current, setCurrent ] = useState<number>( 0 );
   const [ status, setStatus ] = useState<string>( 'Waiting' );
@@ -55,6 +55,7 @@ const MockApplyHook: React.FC<IMockApplyHookProps> = ( props ) => {
         time: thisTime,
         logLabel: logLabel,
         label: label + '- at ' + thisTime,
+        rowLabel: `[ ${ current } of ${ ofThese } ] => ${ label + '- at ' + thisTime }`,
         description: description,
         percentComplete: percentComplete,
         progressHidden: progressHidden,
@@ -62,17 +63,15 @@ const MockApplyHook: React.FC<IMockApplyHookProps> = ( props ) => {
         icon: icon,
       };
 
+    const newFields = fieldsX.length === 0 ? [progressX] : [progressX].concat(fieldsX);
+    console.log( 'setProgress progress, fieldsX, newFields:', progressX, fieldsX, newFields );
+
     const newTotal = total + 1;
     setTotal( newTotal );
     setCurrent( current );
     setProgressX( progressX );
+    setFieldsX( newFields );
 
-  if ( list === 'C') {
-      console.log( `setProgress: ${list}   ${fields.length}  ${current}  ${ofThese}   ${logLabel} `, progressX, fields );
-      const newFields= JSON.parse(JSON.stringify(  [ progressX, ...fields ] ));
-      setFields( newFields );
-
-    }
   }
 
   const markComplete = () : void => {
@@ -80,36 +79,22 @@ const MockApplyHook: React.FC<IMockApplyHookProps> = ( props ) => {
   }
 
   const applyThisTemplate = async (): Promise<void> => {
-    console.log( `applyThisTemplate Start` );
     setStatus( 'Starting' );
     const listCreated: string[] = await provisionMockList( setProgress, markComplete , );
     console.log( `applyThisTemplate Finish: `, listCreated );
-    setStatus( 'Finished ~ 135' );
+    setStatus( 'Finished' );
   };
 
-  const CurrentProgress = progressX === null ? <div style={{ height: '60px', display: 'inline-flex'}} >No Progress was found</div> : <ProgressIndicator
-            label={progressX.label}
-            description={progressX.description}
-            percentComplete={progressX.percentComplete}
-            progressHidden={progressX.progressHidden}/>;
+  const CurrentProgress = commonProgress( progressX );
+  const CurrentRows = commonRows( fieldsX );
 
   const ProgressPane: JSX.Element = <div>
     { CurrentProgress }
-    <div>Status/current:  { status } / { current }</div>
-    { fields.map( ( field: IMyProgress ) => {
-        <div>{ field.logLabel }</div>
-      })
-    }
+    <div>Status: { status } / current: { current }</div>
+    { CurrentRows }
   </div>;
 
-  const ButtonRow: JSX.Element = <div className='apply-template-dropdown' style={{ display: 'flex', justifyContent: 'space-between' }}>
-      <button className={ '' }
-        disabled={ false }
-        onClick={ applyThisTemplate.bind( this ) }
-        >
-        Run Function
-      </button>
-  </div>
+  const ButtonRow: JSX.Element = commmonButtons( applyThisTemplate.bind( this ) );
 
   /***
    *    d88888b d888888b d8b   db  .d8b.  db           d88888b db      d88888b .88b  d88. d88888b d8b   db d888888b 
@@ -123,19 +108,17 @@ const MockApplyHook: React.FC<IMockApplyHookProps> = ( props ) => {
    */
 
   console.log( 'MockTemplate: current, total, ', current, total );
-  // console.log( 'MockTemplate: total', total );
-  // console.log( 'MockTemplate: progressX', progressX );
-  // console.log( 'MockTemplate: fields', fields );
-  // console.log( 'MockTemplate: status', status );
 
-  const FinalElement: JSX.Element =  <div className = { [ 'apply-template-page' ].join( ' ' ) } style={{ minHeight: '450px' }}>
-    <div style={{ fontWeight: 600, fontSize: 'larger', marginBottom: '1em' }}>Want to kick-start your library with a Template?</div>
+  const FinalElement: JSX.Element =  <div className = { [ 'apply-template-page' ].join( ' ' ) } style={{ minHeight: '150px' }}>
+    <div style={{ fontWeight: 600, fontSize: 'larger', marginBottom: '1em' }}>HOOK:  Want to kick-start your library with a Template?</div>
     { ButtonRow }
     { ProgressPane }
 
   </div>;
 
-  return ( FinalElement );
+  return ( <div>
+    { FinalElement }
+  </div>  );
 
 }
 
