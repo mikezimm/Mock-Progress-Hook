@@ -37,33 +37,17 @@ export default class MockProgressClass extends React.Component<IMockProgressClas
     console.log('didUpdate');
   }
 
-  private setProgress(progressHidden: boolean, list: 'E' | 'C' | 'V' | 'I', current: number , ofThese: number, color: string, icon: string, logLabel: string, label: string, description: string, ref: string = null ): void {
-    const thisTime = new Date().toLocaleTimeString();
-    const percentComplete = ofThese !== 0 ? current/ofThese : 0;
-
-    logLabel = current > 0 ? current + '/' + ofThese + ' - ' + logLabel : logLabel ;
-    const progressX: IMyProgress = {
-        ref: ref,
-        time: thisTime,
-        logLabel: logLabel,
-        label: label + '- at ' + thisTime,
-        rowLabel: `[ ${ current } of ${ ofThese } ] => ${ label + '- at ' + thisTime }`,
-        description: description,
-        percentComplete: percentComplete,
-        progressHidden: progressHidden,
-        color: color,
-        icon: icon,
-      };
+  private setProgress( progress: IMyProgress ): void {
 
     const { fieldsX, total } = this.state;
 
-    const newFields = fieldsX.length === 0 ? [progressX] : [progressX].concat(fieldsX);
-    console.log( 'setProgress progres, fieldsX, newFields:', progressX, fieldsX, newFields );
+    const newFields = fieldsX.length === 0 ? [progress] : [progress].concat(fieldsX);
+    console.log( 'setProgress progres, fieldsX, newFields:', progress, fieldsX, newFields );
 
     this.setState({
       total: total + 1,
-      current: current,
-      progressX: progressX,
+      current: progress.current,
+      progressX: progress,
       fieldsX: newFields,
     });
   }

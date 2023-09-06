@@ -13,6 +13,8 @@ export interface IMyProgress {
     label: string;
     rowLabel: string;
     description: string;
+    current: number;
+    ofThese: number;
     percentComplete?: number;
     progressHidden?: boolean;
     icon?: string;
@@ -26,18 +28,7 @@ export interface IMockApplyHookProps {
 
 }
 
-export interface IRawProgress {
-  progressHidden: boolean;
-  list: 'E' | 'C' | 'V' | 'I';
-  current: number;
-  ofThese: number;
-  color: string;
-  icon: string;
-  logLabel: string;
-  label: string;
-  description: string;
-  ref: string;
-}
+let renders: number = 0;
 
 const MockApplyHook: React.FC<IMockApplyHookProps> = ( props ) => {
 
@@ -59,32 +50,15 @@ const MockApplyHook: React.FC<IMockApplyHookProps> = ( props ) => {
 
   const [ progressX, setProgressX ] = useState<IMyProgress>( null );
 
-  const setProgress = ( progressHidden: boolean, list: 'E' | 'C' | 'V' | 'I', current: number , ofThese: number, color: string, icon: string, logLabel: string, label: string, description: string, ref: string = null ): void => {
+  const setProgress = ( progress: IMyProgress ): void => {
 
-    const thisTime = new Date().toLocaleTimeString();
-    const percentComplete = ofThese !== 0 ? current/ofThese : 0;
-
-    logLabel = current > 0 ? current + '/' + ofThese + ' - ' + logLabel : logLabel ;
-    const progressX: IMyProgress = {
-        ref: ref,
-        time: thisTime,
-        logLabel: logLabel,
-        label: label + '- at ' + thisTime,
-        rowLabel: `[ ${ current } of ${ ofThese } ] => ${ label + '- at ' + thisTime }`,
-        description: description,
-        percentComplete: percentComplete,
-        progressHidden: progressHidden,
-        color: color,
-        icon: icon,
-      };
-
-    const newFields = fieldsX.length === 0 ? [progressX] : [progressX].concat(fieldsX);
-    console.log( 'setProgress progress, fieldsX, newFields:', progressX, fieldsX, newFields );
+    const newFields = fieldsX.length === 0 ? [progress] : [progress].concat(fieldsX);
+    console.log( 'setProgress progress, fieldsX, newFields:', progress, fieldsX, newFields );
 
     const newTotal = total + 1;
     setTotal( newTotal );
-    setCurrentX( current );
-    setProgressX( progressX );
+    setCurrentX( progress.current );
+    setProgressX( progress );
     setFieldsX( newFields );
 
   }
@@ -121,8 +95,8 @@ const MockApplyHook: React.FC<IMockApplyHookProps> = ( props ) => {
    *                                                                                                                
    *                                                                                                                
    */
-
-  console.log( 'MockTemplate: current, total, ', currentX, total );
+  renders ++;
+  console.log( 'MockTemplate: renders, current, total, ', renders, currentX, total );
 
   const FinalElement: JSX.Element =  <div className = { [ 'apply-template-page' ].join( ' ' ) } style={{ minHeight: '150px' }}>
     <div style={{ fontWeight: 600, fontSize: 'larger', marginBottom: '1em' }}>HOOK:  Want to kick-start your library with a Template?</div>
