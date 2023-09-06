@@ -1,0 +1,18 @@
+declare interface IMockProgressHookWebPartStrings {
+  PropertyPaneDescription: string;
+  BasicGroupName: string;
+  DescriptionFieldLabel: string;
+  AppLocalEnvironmentSharePoint: string;
+  AppLocalEnvironmentTeams: string;
+  AppLocalEnvironmentOffice: string;
+  AppLocalEnvironmentOutlook: string;
+  AppSharePointEnvironment: string;
+  AppTeamsTabEnvironment: string;
+  AppOfficeEnvironment: string;
+  AppOutlookEnvironment: string;
+}
+
+declare module 'MockProgressHookWebPartStrings' {
+  const strings: IMockProgressHookWebPartStrings;
+  export = strings;
+}

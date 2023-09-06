@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "mock-progress-hook-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/mockProgressHook/MockProgressHookWebPart.js",
+          "manifest": "./src/webparts/mockProgressHook/MockProgressHookWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "MockProgressHookWebPartStrings": "lib/webparts/mockProgressHook/loc/{locale}.js"
+  }
+}

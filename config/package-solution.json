@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "mock-progress-hook-client-side-solution",
+    "id": "e3cf5b01-b854-450a-9dbe-b8ad34e4fd94",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.17.3"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "mock-progress-hook description"
+      },
+      "longDescription": {
+        "default": "mock-progress-hook description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "mock-progress-hook Feature",
+        "description": "The feature that activates elements of the mock-progress-hook solution.",
+        "id": "45bfce12-6d80-43a3-980a-1344878d1268",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/mock-progress-hook.sppkg"
+  }
+}
