@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, } from 'react';
+import { useState, useEffect } from 'react';
 
 import { provisionMockList } from './MockProvision';
 import { commmonButtons, commonProgress, commonRows } from './CommonCode';
@@ -39,7 +39,7 @@ export interface IRawProgress {
   ref: string;
 }
 
-const MockApplyHook: React.FC<IMockApplyHookProps> = ( props ) => {
+const MockApplyHookWorks: React.FC<IMockApplyHookProps> = ( props ) => {
 
   /***
    *    db    db .d8888. d88888b      .d8888. d888888b  .d8b.  d888888b d88888b 
@@ -57,35 +57,83 @@ const MockApplyHook: React.FC<IMockApplyHookProps> = ( props ) => {
   const [ currentX, setCurrentX ] = useState<number>( 0 );
   const [ status, setStatus ] = useState<string>( 'Waiting' );
 
+  const [ rawProgress, setRawProgress ] = useState<IRawProgress>( null );
   const [ progressX, setProgressX ] = useState<IMyProgress>( null );
 
-  const setProgress = ( progressHidden: boolean, list: 'E' | 'C' | 'V' | 'I', current: number , ofThese: number, color: string, icon: string, logLabel: string, label: string, description: string, ref: string = null ): void => {
+  useEffect(() => {
+
+    if ( !rawProgress ) return;
 
     const thisTime = new Date().toLocaleTimeString();
-    const percentComplete = ofThese !== 0 ? current/ofThese : 0;
+    const percentComplete = rawProgress.ofThese !== 0 ? rawProgress.current/rawProgress.ofThese : 0;
 
-    logLabel = current > 0 ? current + '/' + ofThese + ' - ' + logLabel : logLabel ;
-    const progressX: IMyProgress = {
-        ref: ref,
+    rawProgress.logLabel = rawProgress.current > 0 ? rawProgress.current + '/' + rawProgress.ofThese + ' - ' + rawProgress.logLabel : rawProgress.logLabel ;
+    const progress: IMyProgress = {
+        ref: rawProgress.ref,
         time: thisTime,
-        logLabel: logLabel,
-        label: label + '- at ' + thisTime,
-        rowLabel: `[ ${ current } of ${ ofThese } ] => ${ label + '- at ' + thisTime }`,
-        description: description,
+        logLabel: rawProgress.logLabel,
+        label: rawProgress.label + '- at ' + thisTime,
+        rowLabel: `[ ${ rawProgress.current } of ${ rawProgress.ofThese } ] => ${ rawProgress.label + '- at ' + thisTime }`,
+        description: rawProgress.description,
         percentComplete: percentComplete,
-        progressHidden: progressHidden,
-        color: color,
-        icon: icon,
+        progressHidden: rawProgress.progressHidden,
+        color: rawProgress.color,
+        icon: rawProgress.icon,
       };
 
-    const newFields = fieldsX.length === 0 ? [progressX] : [progressX].concat(fieldsX);
-    console.log( 'setProgress progress, fieldsX, newFields:', progressX, fieldsX, newFields );
+    const newFields = fieldsX.length === 0 ? [progress] : [progress].concat(fieldsX);
+    console.log( 'setProgress progress, fieldsX, newFields:', progress, fieldsX, newFields );
 
     const newTotal = total + 1;
     setTotal( newTotal );
-    setCurrentX( current );
-    setProgressX( progressX );
+    setCurrentX( rawProgress.current );
+    setProgressX( progress );
     setFieldsX( newFields );
+
+  }, [ rawProgress ]);
+
+  const setProgress = ( progressHidden: boolean, list: 'E' | 'C' | 'V' | 'I', current: number , ofThese: number, color: string, icon: string, logLabel: string, label: string, description: string, ref: string = null ): void => {
+
+  // const setProgress = ( rawProgressIn : IRawProgress ): void => {
+    const rawProgressIn: IRawProgress = {
+      progressHidden: progressHidden,
+      list: list,
+      current: current,
+      ofThese: ofThese,
+      color: color,
+      icon: icon,
+      logLabel: logLabel,
+      label: label,
+      description: description,
+      ref: ref,
+    }
+    setRawProgress( rawProgressIn )
+
+    // const thisTime = new Date().toLocaleTimeString();
+    // const percentComplete = ofThese !== 0 ? current/ofThese : 0;
+
+    // logLabel = current > 0 ? current + '/' + ofThese + ' - ' + logLabel : logLabel ;
+    // const progressX: IMyProgress = {
+    //     ref: ref,
+    //     time: thisTime,
+    //     logLabel: logLabel,
+    //     label: label + '- at ' + thisTime,
+    //     rowLabel: `[ ${ current } of ${ ofThese } ] => ${ label + '- at ' + thisTime }`,
+    //     description: description,
+    //     percentComplete: percentComplete,
+    //     progressHidden: progressHidden,
+    //     color: color,
+    //     icon: icon,
+    //   };
+
+    // const newFields = fieldsX.length === 0 ? [progressX] : [progressX].concat(fieldsX);
+    // console.log( 'setProgress progress, fieldsX, newFields:', progressX, fieldsX, newFields );
+
+    // const newTotal = total + 1;
+    // setTotal( newTotal );
+    // setCurrent( current );
+    // setProgressX( progressX );
+    // setFieldsX( newFields );
 
   }
 
@@ -125,7 +173,7 @@ const MockApplyHook: React.FC<IMockApplyHookProps> = ( props ) => {
   console.log( 'MockTemplate: current, total, ', currentX, total );
 
   const FinalElement: JSX.Element =  <div className = { [ 'apply-template-page' ].join( ' ' ) } style={{ minHeight: '150px' }}>
-    <div style={{ fontWeight: 600, fontSize: 'larger', marginBottom: '1em' }}>HOOK:  Want to kick-start your library with a Template?</div>
+    <div style={{ fontWeight: 600, fontSize: 'larger', marginBottom: '1em' }}>HOOK Works:  Want to kick-start your library with a Template?</div>
     { ButtonRow }
     { ProgressPane }
 
@@ -137,4 +185,4 @@ const MockApplyHook: React.FC<IMockApplyHookProps> = ( props ) => {
 
 }
 
-export default MockApplyHook;
+export default MockApplyHookWorks;
