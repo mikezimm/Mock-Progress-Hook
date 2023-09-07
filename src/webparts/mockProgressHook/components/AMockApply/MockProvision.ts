@@ -86,19 +86,19 @@ export function buildMyProgress( progressHidden: boolean, list: 'E' | 'Field' | 
   const MyProgress: IMyProgress = {
       id: id,
       timeMS: timeMS,
-      rowLabel: `[ ${ i } of ${ n } ${ id }] => ${ label + '- at ' + timeStr }`,
+      rowLabel: `[ ${ i * 1 } of ${ n * 1 } ${ id }] => ${ label + '- at ' + timeStr }`,
       ref: ref,
       time: timeStr,
       logLabel: `Adding ${list} to list ( ${step} ): `,
       label: label + '- at ' + timeStr,
-      description: `${list}s ${ i } of ${n} : ${item}`,
-      current: i,
-      ofThese: n,
-      array: list,
-      percentComplete: percentComplete,
-      progressHidden: progressHidden,
-      color: color,
-      icon: icon,
+      description: `${list}s ${ i * 1 } of ${n * 1} : ${item}`,
+      current: i * 1,
+      ofThese: n * 1,
+      array: `${list}`,
+      percentComplete: percentComplete * 1,
+      progressHidden: progressHidden === true ? true : false,
+      color: `${color}`,
+      icon: `${icon}`,
     };
 
     return MyProgress;

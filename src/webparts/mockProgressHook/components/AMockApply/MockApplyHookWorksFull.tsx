@@ -34,46 +34,76 @@ const MockApplyHookWorksFull: React.FC<IMockApplyHookProps> = ( props ) => {
   const [ status, setStatus ] = useState<string>( 'Waiting' );
   const [ id , setId ] = useState<string>( makeid(5) );
 
-  const [ progressX, setProgressX ] = useState<IMyProgress[]>( [] );
+  const [ progressX, setProgressX ] = useState<IMyProgress>( null );
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    if ( !progressX || progressX.length === 0 ) return;
+  //   if ( !progressX || progressX.length === 0 ) return;
 
-    if ( progressX[0].array === 'Field' ) {
-      // const newArray = fieldsX.length === 0 ? [progressX] : [progressX].concat(fieldsX);
-      console.log( 'setProgress progress, fieldsX, newArray:', progressX, fieldsX, progressX );
-      setFieldsX( progressX );
+    // if ( progressX[0].array === 'Field' ) {
+    //   // const newArray = fieldsX.length === 0 ? [progressX] : [progressX].concat(fieldsX);
+    //   console.log( 'setProgress progress, fieldsX, newArray:', progressX, fieldsX, progressX );
+    //   setFieldsX( progressX );
 
-    } else if ( progressX[0].array === 'View' ) {
-      // const newArray = viewsX.length === 0 ? [progressX] : [progressX].concat(viewsX);
-      console.log( 'setProgress progress, viewsX, newArray:', progressX, viewsX, progressX );
-      setViewsX( progressX );
+    // } else if ( progressX[0].array === 'View' ) {
+    //   // const newArray = viewsX.length === 0 ? [progressX] : [progressX].concat(viewsX);
+    //   console.log( 'setProgress progress, viewsX, newArray:', progressX, viewsX, progressX );
+    //   setViewsX( progressX );
 
-    } else if ( progressX[0].array === 'Item' ) {
-      // const newArray = itemsX.length === 0 ? [progressX] : [progressX].concat(itemsX);
-      console.log( 'setProgress progress, itemsX, newArray:', progressX, itemsX, progressX );
-      setItemsX( progressX );
+    // } else if ( progressX[0].array === 'Item' ) {
+    //   // const newArray = itemsX.length === 0 ? [progressX] : [progressX].concat(itemsX);
+    //   console.log( 'setProgress progress, itemsX, newArray:', progressX, itemsX, progressX );
+    //   setItemsX( progressX );
 
-    }
+    // }
 
 
-  }, [ id ]);
+  // }, [ id ]);
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    if ( !progressX || progressX.length === 0 ) return;
+  //   if ( !progressX || progressX.length === 0 ) return;
 
-    const newTotal = total + 1;
-    setTotal( newTotal );
-    setCurrentX( progressX[0].current );
-    console.log( id );
-    setId( progressX[0].id );
+  //   const newTotal = total + 1;
+  //   setTotal( newTotal );
+  //   setCurrentX( progressX[0].current );
+  //   console.log( id );
+  //   setId( progressX[0].id );
 
-  }, [ progressX ]);
+  // }, [ progressX ]);
 
   const markComplete = () : void => {
-    setStatus( 'Finished ~ 128' );
+    setStatus( 'Finished' );
+  }
+
+  const setProgressNow = ( progress: IMyProgress[] ) : void => {
+    if ( !progress || progress.length === 0 ) return;
+
+    const progressCopy: IMyProgress[] = JSON.parse(JSON.stringify( progress ));
+    const newTotal = total + 1;
+    // setProgressX( progressCopy );
+    setTotal( newTotal );
+    setCurrentX( progressCopy[0].current );
+    setProgressX( progressCopy[0] );
+    console.log( 'setProgressNow Id: ', id );
+    setId( progressCopy[0].id );
+
+    if ( progressCopy[0].array === 'Field' ) {
+      // const newArray = fieldsX.length === 0 ? [progressCopyX] : [progressCopyX].concat(fieldsX);
+      console.log( 'setProgress progress, fieldsX, newArray:', progressCopy, fieldsX, progressCopy );
+      setFieldsX( progressCopy );
+
+    } else if ( progressCopy[0].array === 'View' ) {
+      // const newArray = viewsX.length === 0 ? [progressX] : [progressX].concat(viewsX);
+      console.log( 'setProgress progress, viewsX, newArray:', progressCopy, viewsX, progressCopy );
+      setViewsX( progressCopy );
+
+    } else if ( progressCopy[0].array === 'Item' ) {
+      // const newArray = itemsX.length === 0 ? [progressX] : [progressX].concat(itemsX);
+      console.log( 'setProgress progress, itemsX, newArray:', progressCopy, itemsX, progressCopy );
+      setItemsX( progressCopy );
+
+    }
   }
 
   const applyThisTemplate = async (): Promise<void> => {
@@ -81,31 +111,34 @@ const MockApplyHookWorksFull: React.FC<IMockApplyHookProps> = ( props ) => {
     setFieldsX( [] );
     setViewsX( [] );
     setItemsX( [] );
-    const listCreated: IMyProgress[][] = await provisionMockList( setProgressX, markComplete , );
+    const listCreated: IMyProgress[][] = await provisionMockList( setProgressNow, markComplete , );
     console.log( `applyThisTemplate Finish: `, listCreated );
+    setFieldsX( listCreated[0] );
+    setViewsX( listCreated[1] );
+    setItemsX( listCreated[2] );
     setStatus( 'Finished' );
   };
 
-  console.log( 'before fieldsX:', fieldsX );
-  const CurrentProgress = progressX.length === 0 ? undefined : commonProgress( progressX[0] );
+  // console.log( 'before fieldsX:', fieldsX );
+  const CurrentProgress = !progressX ? undefined : commonProgress( progressX );
 
-  const FieldsPane: JSX.Element = <div>
+  const FieldsPane: JSX.Element = status !== 'Finished' ?  undefined : <div>
     <h3>Fields Status: </h3>
     { fieldsX.map( ( item: IMyProgress ) => {
       return <div key={ item.label }>{ item.rowLabel }</div>
     }) }
   </div>;
 
-  console.log( 'before viewsX:', viewsX );
-  const ViewsPane: JSX.Element = <div>
+  // console.log( 'before viewsX:', viewsX );
+  const ViewsPane: JSX.Element = status !== 'Finished' ?  undefined : <div>
     <h3>Views Status:</h3>
     { viewsX.map( ( item: IMyProgress ) => {
       return <div key={ item.label }>{ item.rowLabel }</div>
     }) }
   </div>;
 
-  console.log( 'before itemsX:', itemsX );
-  const ItemsPane: JSX.Element = <div>
+  // console.log( 'before itemsX:', itemsX );
+  const ItemsPane: JSX.Element = status !== 'Finished' ?  undefined : <div>
     <h3>Items Status: </h3>
     { itemsX.map( ( item: IMyProgress ) => {
       return <div key={ item.label }>{ item.rowLabel }</div>
