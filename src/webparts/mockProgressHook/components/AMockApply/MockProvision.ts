@@ -3,11 +3,11 @@ import { IMyProgress } from './IMyProgress';
 
 export async function provisionMockList( setProgress : (progress : IMyProgress[]) => void, markComplete: any, ): Promise<IMyProgress[][]>{
   // const result = await mockCreateField(['create','changesFinal'], [ 'Item1', 'Item2', 'Item3' ], setProgress,  );
-  const result1 = await mockCreateField1(['step1', 'step2', 'step3'], [ 'Item1F', 'Item2F', 'Item3F' ], 'Field',setProgress,  );
+  const result1 = await mockCreateField1(['create', 'firstUpdate', 'finalUpdate'], [ 'Year', 'Period', 'Category', 'To', 'From', 'Subject', 'MessageId' ], 'Field',setProgress,  );
   console.log('Finished result1');
-  const result2 = await mockCreateField2(['step1', 'step2', 'step3'], [ 'Item1V', 'Item2V', 'Item3V' ], 'View', setProgress,  );
+  const result2 = await mockCreateField2(['create', 'firstUpdate', 'finalUpdate'], [ 'By Year', 'By Period', ], 'View', setProgress,  );
   console.log('Finished result2');
-  const result3 = await mockCreateField3(['step1', 'step2', 'step3'], [ 'Item1I', 'Item2I', 'Item3I' ], 'Item', setProgress,  );
+  const result3 = await mockCreateField3(['create', 'firstUpdate', 'finalUpdate'], [ 'Item1I', 'Item2I', 'Item3I' ], 'Item', setProgress,  );
   console.log('Finished result3');
   return [ result1, result2, result3 ];
 }
@@ -80,7 +80,7 @@ export async function buildMyProgress( progressHidden: boolean, itemType: 'E' | 
   const MyProgress: IMyProgress = {
       id: id,
       timeMS: timeMS,
-      rowLabel: ` ${step} [ ${ i } of ${ n } ${ id }] => ${ label + '- at ' + timeStr }`,
+      rowLabel: `${step} [ ${ itemType } ${ i } of ${ n } ${ id }] => ${ item + ' - at ' + timeStr }`,
       ref: ref,
       time: timeStr,
       logLabel: ` ${step} Adding ${itemType} to list ( ${item} ): `,
