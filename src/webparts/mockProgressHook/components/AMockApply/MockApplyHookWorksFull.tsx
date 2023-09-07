@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 
 import { provisionMockList } from './MockProvision';
-import { commmonButtons, commonProgress, commonRows } from './CommonCode';
+import { commmonButtons, commonProgress,  } from './CommonCode'; // commonRows
 
 require ('./MockApply.css');
 
@@ -31,7 +31,7 @@ export interface IMockApplyHookProps {
 
 let renders: number = 0;
 
-const MockApplyHookWorks: React.FC<IMockApplyHookProps> = ( props ) => {
+const MockApplyHookWorksFull: React.FC<IMockApplyHookProps> = ( props ) => {
 
   /***
    *    db    db .d8888. d88888b      .d8888. d888888b  .d8b.  d888888b d88888b 
@@ -45,6 +45,8 @@ const MockApplyHookWorks: React.FC<IMockApplyHookProps> = ( props ) => {
    */
 
   const [ fieldsX, setFieldsX ] = useState<IMyProgress[]>( [] );
+  const [ viewsX, setViewsX ] = useState<IMyProgress[]>( [] );
+  const [ itemsX, setItemsX ] = useState<IMyProgress[]>( [] );
   const [ total, setTotal ] = useState<number>( 0 );
   const [ currentX, setCurrentX ] = useState<number>( 0 );
   const [ status, setStatus ] = useState<string>( 'Waiting' );
@@ -55,19 +57,31 @@ const MockApplyHookWorks: React.FC<IMockApplyHookProps> = ( props ) => {
 
     if ( !progressX ) return;
 
-    const newFields = fieldsX.length === 0 ? [progressX] : [progressX].concat(fieldsX);
-    console.log( 'setProgress progress, fieldsX, newFields:', progressX, fieldsX, newFields );
-
     const newTotal = total + 1;
     setTotal( newTotal );
     setCurrentX( progressX.current );
-    setFieldsX( newFields );
+    if ( progressX.array === 'Field' ) {
+      // const newArray = fieldsX.length === 0 ? [progressX] : [progressX].concat(fieldsX);
+      const newArray = [ progressX, ...fieldsX ];
+      console.log( 'setProgress progress, fieldsX, newArray:', progressX, fieldsX, newArray );
+      setFieldsX( newArray );
+
+    } else if ( progressX.array === 'View' ) {
+      // const newArray = viewsX.length === 0 ? [progressX] : [progressX].concat(viewsX);
+      const newArray = [ progressX, ...viewsX ];
+      console.log( 'setProgress progress, viewsX, newArray:', progressX, viewsX, newArray );
+      setViewsX( newArray );
+
+    } else if ( progressX.array === 'Item' ) {
+      // const newArray = itemsX.length === 0 ? [progressX] : [progressX].concat(itemsX);
+      const newArray = [ progressX, ...itemsX ];
+      console.log( 'setProgress progress, itemsX, newArray:', progressX, itemsX, newArray );
+      setItemsX( newArray );
+
+    }
+
 
   }, [ progressX ]);
-
-  // const setProgress = ( progress: IMyProgress ): void => {
-  //   setProgressX( progress );
-  // }
 
   const markComplete = () : void => {
     setStatus( 'Finished ~ 128' );
@@ -75,19 +89,37 @@ const MockApplyHookWorks: React.FC<IMockApplyHookProps> = ( props ) => {
 
   const applyThisTemplate = async (): Promise<void> => {
     setStatus( 'Starting' );
+    setViewsX( [] );
+    setItemsX( [] );
+    setFieldsX( [] );
     const listCreated: IMyProgress[][] = await provisionMockList( setProgressX, markComplete , );
     console.log( `applyThisTemplate Finish: `, listCreated );
     setStatus( 'Finished' );
   };
 
   const CurrentProgress = commonProgress( progressX );
-  const CurrentRows = commonRows( fieldsX );
 
-  const ProgressPane: JSX.Element = <div>
-    { CurrentProgress }
-    <div>Status: { status } / current: { currentX }</div>
-    { CurrentRows }
+  const FieldsPane: JSX.Element = <div>
+    <h3>Fields Status: </h3>
+    { fieldsX.map( ( item: IMyProgress ) => {
+      return <div key={ item.label }>{ item.rowLabel }</div>
+    }) }
   </div>;
+
+  const ViewsPane: JSX.Element = <div>
+    <h3>Views Status:</h3>
+    { viewsX.map( ( item: IMyProgress ) => {
+      return <div key={ item.label }>{ item.rowLabel }</div>
+    }) }
+  </div>;
+
+  const ItemsPane: JSX.Element = <div>
+    <h3>Items Status: </h3>
+    { itemsX.map( ( item: IMyProgress ) => {
+      return <div key={ item.label }>{ item.rowLabel }</div>
+    }) }
+  </div>;
+
 
   const ButtonRow: JSX.Element = commmonButtons( applyThisTemplate.bind( this ) );
 
@@ -108,7 +140,12 @@ const MockApplyHookWorks: React.FC<IMockApplyHookProps> = ( props ) => {
   const FinalElement: JSX.Element =  <div className = { [ 'apply-template-page' ].join( ' ' ) } style={{ minHeight: '150px' }}>
     <div style={{ fontWeight: 600, fontSize: 'larger', marginBottom: '1em' }}>HOOK Works:  Want to kick-start your library with a Template?</div>
     { ButtonRow }
-    { ProgressPane }
+    { CurrentProgress }
+    <div style={{ display: 'flex', gap: '2em' }}>
+      { FieldsPane }
+      { ViewsPane }
+      { ItemsPane }
+    </div>
 
   </div>;
 
@@ -118,4 +155,4 @@ const MockApplyHookWorks: React.FC<IMockApplyHookProps> = ( props ) => {
 
 }
 
-export default MockApplyHookWorks;
+export default MockApplyHookWorksFull;

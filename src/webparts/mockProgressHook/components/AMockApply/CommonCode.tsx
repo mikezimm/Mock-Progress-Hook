@@ -15,9 +15,10 @@ export function commonProgress( progressX: IMyProgress ) : JSX.Element {
 
 }
 
-export function commonRows( fields: IMyProgress[] ): JSX.Element[] {
-  const rows: JSX.Element[] = fields.map( ( field: IMyProgress ) => {
-    return <div key={ field.label }>{ field.rowLabel }</div>
+export function commonRows( items: IMyProgress[] ): JSX.Element[] {
+  console.log('commonRows:', items.length );
+  const rows: JSX.Element[] = items.map( ( item: IMyProgress ) => {
+    return <div key={ item.label }>{ item.rowLabel }</div>
   })
   return rows;
 

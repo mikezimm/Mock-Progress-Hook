@@ -22,6 +22,7 @@ export interface IMyProgress {
     color?: string;
     ref?: string;
     refElement?: any;
+    id?: string;
   }
 
 
@@ -70,7 +71,7 @@ const MockApplyHook: React.FC<IMockApplyHookProps> = ( props ) => {
 
   const applyThisTemplate = async (): Promise<void> => {
     setStatus( 'Starting' );
-    const listCreated: string[] = await provisionMockList( setProgress, markComplete , );
+    const listCreated: IMyProgress[][] = await provisionMockList( setProgress, markComplete , );
     console.log( `applyThisTemplate Finish: `, listCreated );
     setStatus( 'Finished' );
   };

@@ -58,7 +58,7 @@ export default class MockProgressClass extends React.Component<IMockProgressClas
 
   private async applyThisTemplate( ): Promise<void> {
     this.setState({ status: 'Starting ~ 96' });
-    const listCreated: string[] = await provisionMockList( this.setProgress.bind(this), this.markComplete.bind(this) , );
+    const listCreated: IMyProgress[][] = await provisionMockList( this.setProgress.bind(this), this.markComplete.bind(this) , );
     console.log( `applyThisTemplate Finish: `, listCreated );
     this.setState({ status: 'Finished ~ 100' });
   }
