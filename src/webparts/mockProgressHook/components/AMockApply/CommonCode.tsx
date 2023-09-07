@@ -6,7 +6,7 @@ import { IMyProgress } from './IMyProgress';
 export function commonProgress( progressX: IMyProgress ) : JSX.Element {
 
   const CurrentProgress = progressX === null ? <div style={{ height: '60px', display: 'inline-flex'}} >No Progress was found</div> : <ProgressIndicator
-    label={progressX.label}
+    label={progressX.rowLabel}
     description={progressX.description}
     percentComplete={progressX.percentComplete}
     progressHidden={progressX.progressHidden}/>;
@@ -20,7 +20,7 @@ export function commonRows( items: IMyProgress[] ): JSX.Element[] {
   const sortedItems = items.sort((a, b) => b.timeMS - a.timeMS);
   console.log('commonRows Sorted:', sortedItems.length, sortedItems );
   const rows: JSX.Element[] = sortedItems.map( ( item: IMyProgress ) => {
-    return <div key={ item.label }>{ item.rowLabel }</div>
+    return <div key={ item.id }>{ item.rowLabel }</div>
   })
   return rows;
 
