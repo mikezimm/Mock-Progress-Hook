@@ -17,6 +17,7 @@ export interface IMyProgress {
     ofThese: number;
     percentComplete?: number;
     progressHidden?: boolean;
+    array: string;
     icon?: string;
     color?: string;
     ref?: string;

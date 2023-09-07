@@ -7,7 +7,7 @@ export async function provisionMockList( setProgress: any, markComplete: any, ):
   return result;
 }
 
-export async function mockCreateField( steps: string[], items: string[], setProgress : any) : Promise<string[]> {
+export async function mockCreateField( steps: string[], items: string[], setProgress : (progress : IMyProgress) => void, ) : Promise<string[]> {
   const results: string[]=[];
   for ( const step of steps ) {
 
@@ -40,6 +40,7 @@ export function buildMyProgress( progressHidden: boolean, list: 'E' | 'C' | 'V' 
       description: description,
       current: current,
       ofThese: ofThese,
+      array: list,
       percentComplete: percentComplete,
       progressHidden: progressHidden,
       color: color,
