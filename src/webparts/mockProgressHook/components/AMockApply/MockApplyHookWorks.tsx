@@ -31,7 +31,7 @@ const MockApplyHookWorks: React.FC<IMockApplyHookProps> = ( props ) => {
   const [ currentX, setCurrentX ] = useState<number>( 0 );
   const [ status, setStatus ] = useState<string>( 'Waiting' );
 
-  const [ progressX, setProgressX ] = useState<IMyProgress>( null );
+  const [ progressX, setProgressX ] = useState<IMyProgress[]>( [] );
 
   useEffect(() => {
 
@@ -42,8 +42,8 @@ const MockApplyHookWorks: React.FC<IMockApplyHookProps> = ( props ) => {
 
     const newTotal = total + 1;
     setTotal( newTotal );
-    setCurrentX( progressX.current );
-    setFieldsX( newFields );
+    setCurrentX( progressX[0].current );
+    // setFieldsX( newFields );
 
   }, [ progressX ]);
 
@@ -62,7 +62,7 @@ const MockApplyHookWorks: React.FC<IMockApplyHookProps> = ( props ) => {
     setStatus( 'Finished' );
   };
 
-  const CurrentProgress = commonProgress( progressX );
+  const CurrentProgress = progressX.length === 0 ? undefined : commonProgress( progressX[0] );
   const CurrentRows = commonRows( fieldsX );
 
   const ProgressPane: JSX.Element = <div>
@@ -88,7 +88,7 @@ const MockApplyHookWorks: React.FC<IMockApplyHookProps> = ( props ) => {
   console.log( 'MockTemplateWorks: renders, current, total, ', renders, currentX, total );
 
   const FinalElement: JSX.Element =  <div className = { [ 'apply-template-page' ].join( ' ' ) } style={{ minHeight: '150px' }}>
-    <div style={{ fontWeight: 600, fontSize: 'larger', marginBottom: '1em' }}>HOOK Works:  Want to kick-start your library with a Template?</div>
+    <div style={{ fontWeight: 600, fontSize: 'larger', marginBottom: '1em' }}>MockApplyHookWorks:  Want to kick-start your library with a Template?</div>
     { ButtonRow }
     { ProgressPane }
 

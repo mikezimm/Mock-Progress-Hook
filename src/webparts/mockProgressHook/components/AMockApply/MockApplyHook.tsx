@@ -31,18 +31,18 @@ const MockApplyHook: React.FC<IMockApplyHookProps> = ( props ) => {
   const [ currentX, setCurrentX ] = useState<number>( 0 );
   const [ status, setStatus ] = useState<string>( 'Waiting' );
 
-  const [ progressX, setProgressX ] = useState<IMyProgress>( null );
+  const [ progressX, setProgressX ] = useState<IMyProgress[]>( [] );
 
-  const setProgress = ( progress: IMyProgress ): void => {
+  const setProgress = ( progress: IMyProgress[] ): void => {
 
-    const newFields = fieldsX.length === 0 ? [progress] : [progress].concat(fieldsX);
-    console.log( 'setProgress progress, fieldsX, newFields:', progress, fieldsX, newFields );
+    // const newFields = fieldsX.length === 0 ? [progress] : [progress].concat(fieldsX);
+    // console.log( 'setProgress progress, fieldsX, newFields:', progress, fieldsX, newFields );
 
     const newTotal = total + 1;
     setTotal( newTotal );
-    setCurrentX( progress.current );
+    setCurrentX( progress[0].current );
     setProgressX( progress );
-    setFieldsX( newFields );
+    setFieldsX( progress );
 
   }
 
@@ -51,13 +51,16 @@ const MockApplyHook: React.FC<IMockApplyHookProps> = ( props ) => {
   }
 
   const applyThisTemplate = async (): Promise<void> => {
+    setProgressX( [] );
+    setFieldsX( [] );
     setStatus( 'Starting' );
+
     const listCreated: IMyProgress[][] = await provisionMockList( setProgress, markComplete , );
     console.log( `applyThisTemplate Finish: `, listCreated );
     setStatus( 'Finished' );
   };
 
-  const CurrentProgress = commonProgress( progressX );
+  const CurrentProgress = progressX.length === 0 ? undefined : commonProgress( progressX[0] );
   const CurrentRows = commonRows( fieldsX );
 
   const ProgressPane: JSX.Element = <div>
@@ -82,7 +85,7 @@ const MockApplyHook: React.FC<IMockApplyHookProps> = ( props ) => {
   console.log( 'MockTemplate: renders, current, total, ', renders, currentX, total );
 
   const FinalElement: JSX.Element =  <div className = { [ 'apply-template-page' ].join( ' ' ) } style={{ minHeight: '150px' }}>
-    <div style={{ fontWeight: 600, fontSize: 'larger', marginBottom: '1em' }}>HOOK:  Want to kick-start your library with a Template?</div>
+    <div style={{ fontWeight: 600, fontSize: 'larger', marginBottom: '1em' }}>MockApplyHOOK:  Want to kick-start your library with a Template?</div>
     { ButtonRow }
     { ProgressPane }
 

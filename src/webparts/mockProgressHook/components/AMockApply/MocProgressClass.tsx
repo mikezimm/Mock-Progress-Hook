@@ -12,7 +12,7 @@ export interface IMocProgressClassState {
   total: number;
   current: number;
   status: string;
-  progressX: IMyProgress;
+  progressX: IMyProgress[];
 }
 
 export default class MockProgressClass extends React.Component<IMockProgressClassProps, IMocProgressClassState> {
@@ -25,7 +25,7 @@ export default class MockProgressClass extends React.Component<IMockProgressClas
       total: 0,
       current: 0,
       status: '',
-      progressX: null,
+      progressX: [],
     };
   }
 
@@ -37,18 +37,18 @@ export default class MockProgressClass extends React.Component<IMockProgressClas
     console.log('didUpdate');
   }
 
-  private setProgress( progress: IMyProgress ): void {
+  private setProgress( progress: IMyProgress[] ): void {
 
     const { fieldsX, total } = this.state;
 
-    const newFields = fieldsX.length === 0 ? [progress] : [progress].concat(fieldsX);
-    console.log( 'setProgress progres, fieldsX, newFields:', progress, fieldsX, newFields );
+    // const newFields = fieldsX.length === 0 ? [progress] : [progress].concat(fieldsX);
+    // console.log( 'setProgress progres, fieldsX, newFields:', progress, fieldsX, newFields );
 
     this.setState({
       total: total + 1,
-      current: progress.current,
+      current: progress[0].current,
       progressX: progress,
-      fieldsX: newFields,
+      fieldsX: progress,
     });
   }
 
@@ -57,10 +57,10 @@ export default class MockProgressClass extends React.Component<IMockProgressClas
   }
 
   private async applyThisTemplate( ): Promise<void> {
-    this.setState({ status: 'Starting ~ 96', fieldsX: [] });
+    this.setState({ status: 'Starting ~ 96', fieldsX: [], progressX: [] });
     const listCreated: IMyProgress[][] = await provisionMockList( this.setProgress.bind(this), this.markComplete.bind(this) , );
     console.log( `applyThisTemplate Finish: `, listCreated );
-    this.setState({ status: 'Finished ~ 100' });
+    this.setState({ status: 'Finished ~ 100', fieldsX: listCreated[0], progressX: listCreated[0] });
   }
 
   public render(): React.ReactElement<IMockProgressClassProps> {
@@ -68,7 +68,7 @@ export default class MockProgressClass extends React.Component<IMockProgressClas
     const { progressX, current, fieldsX, total } = this.state;
     console.log( 'render: fieldsX', fieldsX );
 
-    const CurrentProgress = commonProgress( progressX );
+    const CurrentProgress = progressX.length === 0 ? undefined : commonProgress( progressX[0] );
     const CurrentRows = commonRows( fieldsX );
 
     const ProgressPane: JSX.Element = <div>
@@ -98,9 +98,9 @@ export default class MockProgressClass extends React.Component<IMockProgressClas
       { ProgressPane }
     </div>;
 
-    return (  <div>
-        { FinalElement }
-      </div> );
+    return ( <div>
+      { FinalElement }
+    </div> );
   }
 
 }
