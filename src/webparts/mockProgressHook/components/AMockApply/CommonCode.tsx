@@ -1,7 +1,7 @@
 
 import * as React from 'react';
-import { IMyProgress } from './MockApplyHook';
 import { ProgressIndicator } from 'office-ui-fabric-react';
+import { IMyProgress } from './IMyProgress';
 
 export function commonProgress( progressX: IMyProgress ) : JSX.Element {
 
@@ -16,8 +16,10 @@ export function commonProgress( progressX: IMyProgress ) : JSX.Element {
 }
 
 export function commonRows( items: IMyProgress[] ): JSX.Element[] {
-  console.log('commonRows:', items.length );
-  const rows: JSX.Element[] = items.map( ( item: IMyProgress ) => {
+  console.log('commonRows Origin', items.length, items );
+  const sortedItems = items.sort((a, b) => b.timeMS - a.timeMS);
+  console.log('commonRows Sorted:', sortedItems.length, sortedItems );
+  const rows: JSX.Element[] = sortedItems.map( ( item: IMyProgress ) => {
     return <div key={ item.label }>{ item.rowLabel }</div>
   })
   return rows;

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { IMyProgress } from '../AMockApply/MockApplyHook';
 import { provisionMockList } from './MockProvision';
 import { commmonButtons, commonProgress, commonRows } from './CommonCode';
+import { IMyProgress } from './IMyProgress';
 
 export interface IMockProgressClassProps {
 
@@ -57,7 +57,7 @@ export default class MockProgressClass extends React.Component<IMockProgressClas
   }
 
   private async applyThisTemplate( ): Promise<void> {
-    this.setState({ status: 'Starting ~ 96' });
+    this.setState({ status: 'Starting ~ 96', fieldsX: [] });
     const listCreated: IMyProgress[][] = await provisionMockList( this.setProgress.bind(this), this.markComplete.bind(this) , );
     console.log( `applyThisTemplate Finish: `, listCreated );
     this.setState({ status: 'Finished ~ 100' });

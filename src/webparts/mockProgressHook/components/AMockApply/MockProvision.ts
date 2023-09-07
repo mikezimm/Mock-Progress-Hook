@@ -1,4 +1,4 @@
-import { IMyProgress } from "./MockApplyHook";
+import { IMyProgress } from './IMyProgress';
 
 
 export async function provisionMockList( setProgress: any, markComplete: any, ): Promise<IMyProgress[][]>{
@@ -14,13 +14,13 @@ export async function provisionMockList( setProgress: any, markComplete: any, ):
 
 export async function mockCreateField2( steps: string[], items: string[], list: 'E' | 'Field' | 'View' | 'Item' , setProgress : (progress : IMyProgress) => void, ) : Promise<IMyProgress[]> {
   const results: IMyProgress[]=[];
-  await new Promise(resolve => setTimeout(resolve, 700)); // Pause for effect
+  // await new Promise(resolve => setTimeout(resolve, 700)); // Pause for effect
   for ( const step of steps ) {
 
     const n = items.length;
     let i = 0;
     for (const item of items) {
-        await new Promise(resolve => setTimeout(resolve, 300)); // Pause for effect
+        // await new Promise(resolve => setTimeout(resolve, 300)); // Pause for effect
         i++;
         // setProgress( buildMyProgress( false, list, i, n , 'darkgray', 'CalculatorSubtract', f, `Adding ${list} to list ( ${step} ): `, `${list}s ${ i } of ${n} : ${f}` , `step ${'anotherFunction ~ 34'}`) );
         const myProgress: IMyProgress = buildMyProgress( false, list, i, n , 'darkgray', 'CalculatorSubtract', item, step , `step ${'anotherFunction ~ 34'}` );
@@ -34,13 +34,13 @@ export async function mockCreateField2( steps: string[], items: string[], list: 
 }
 export async function mockCreateField1( steps: string[], items: string[], list: 'E' | 'Field' | 'View' | 'Item' , setProgress : (progress : IMyProgress) => void, ) : Promise<IMyProgress[]> {
   const results: IMyProgress[]=[];
-  await new Promise(resolve => setTimeout(resolve, 700)); // Pause for effect
+  // await new Promise(resolve => setTimeout(resolve, 700)); // Pause for effect
   for ( const step of steps ) {
 
     const n = items.length;
     let i = 0;
     for (const item of items) {
-        await new Promise(resolve => setTimeout(resolve, 300)); // Pause for effect
+        // await new Promise(resolve => setTimeout(resolve, 300)); // Pause for effect
         i++;
         // setProgress( buildMyProgress( false, list, i, n , 'darkgray', 'CalculatorSubtract', f, `Adding ${list} to list ( ${step} ): `, `${list}s ${ i } of ${n} : ${f}` , `step ${'anotherFunction ~ 34'}`) );
         const myProgress: IMyProgress = buildMyProgress( false, list, i, n , 'darkgray', 'CalculatorSubtract', item, step , `step ${'anotherFunction ~ 34'}` );
@@ -54,13 +54,13 @@ export async function mockCreateField1( steps: string[], items: string[], list: 
 }
 export async function mockCreateField3( steps: string[], items: string[], list: 'E' | 'Field' | 'View' | 'Item' , setProgress : (progress : IMyProgress) => void, ) : Promise<IMyProgress[]> {
   const results: IMyProgress[]=[];
-  await new Promise(resolve => setTimeout(resolve, 700)); // Pause for effect
+  // await new Promise(resolve => setTimeout(resolve, 700)); // Pause for effect
   for ( const step of steps ) {
 
     const n = items.length;
     let i = 0;
     for (const item of items) {
-      await new Promise(resolve => setTimeout(resolve, 300)); // Pause for effect
+      // await new Promise(resolve => setTimeout(resolve, 300)); // Pause for effect
       i++;
       // setProgress( buildMyProgress( false, list, i, n , 'darkgray', 'CalculatorSubtract', f, `Adding ${list} to list ( ${step} ): `, `${list}s ${ i } of ${n} : ${f}` , `step ${'anotherFunction ~ 34'}`) );
       const myProgress: IMyProgress = buildMyProgress( false, list, i, n , 'darkgray', 'CalculatorSubtract', item, step , `step ${'anotherFunction ~ 34'}` );
@@ -76,16 +76,21 @@ export async function mockCreateField3( steps: string[], items: string[], list: 
 // export function buildMyProgress( progressHidden: boolean, list: 'E' | 'Field' | 'View' | 'Item' | string, current: number , ofThese: number, color: string, icon: string, logLabel: string, label: string, description: string, ref: string = null ) : IMyProgress {
 export function buildMyProgress( progressHidden: boolean, list: 'E' | 'Field' | 'View' | 'Item' | string, i: number , n: number, color: string, icon: string, item: string, step: string, ref: string = null ) : IMyProgress {
 
-  const thisTime = new Date().toLocaleTimeString();
+  const thisTime = new Date();
+  const timeMS = thisTime.getTime();
+  const timeStr = thisTime.toLocaleTimeString();
+
   const percentComplete = n !== 0 ? i/n : 0;
   const id: string= makeid( 5 );
   const label =  `${list}s ${ i } of ${n} : ${item}`;
   const MyProgress: IMyProgress = {
+      id: id,
+      timeMS: timeMS,
+      rowLabel: `[ ${ i } of ${ n } ${ id }] => ${ label + '- at ' + timeStr }`,
       ref: ref,
-      time: thisTime,
+      time: timeStr,
       logLabel: `Adding ${list} to list ( ${step} ): `,
-      label: label + '- at ' + thisTime,
-      rowLabel: `[ ${ i } of ${ n } ${ id }] => ${ label + '- at ' + thisTime }`,
+      label: label + '- at ' + timeStr,
       description: `${list}s ${ i } of ${n} : ${item}`,
       current: i,
       ofThese: n,
@@ -94,7 +99,6 @@ export function buildMyProgress( progressHidden: boolean, list: 'E' | 'Field' | 
       progressHidden: progressHidden,
       color: color,
       icon: icon,
-      id: id,
     };
 
     return MyProgress;

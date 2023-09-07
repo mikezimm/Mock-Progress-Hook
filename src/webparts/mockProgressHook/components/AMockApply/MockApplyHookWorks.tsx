@@ -3,27 +3,9 @@ import { useState, useEffect } from 'react';
 
 import { provisionMockList } from './MockProvision';
 import { commmonButtons, commonProgress, commonRows } from './CommonCode';
+import { IMyProgress } from './IMyProgress';
 
 require ('./MockApply.css');
-
-export interface IMyProgress {
-  // [key: string]: string | boolean | number | undefined;
-    time: string;
-    logLabel: string;
-    label: string;
-    rowLabel: string;
-    description: string;
-    current: number;
-    ofThese: number;
-    percentComplete?: number;
-    progressHidden?: boolean;
-    array: string;
-    icon?: string;
-    color?: string;
-    ref?: string;
-    refElement?: any;
-  }
-
 
 export interface IMockApplyHookProps {
 

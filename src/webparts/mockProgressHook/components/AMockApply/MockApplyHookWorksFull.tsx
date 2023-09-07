@@ -3,27 +3,9 @@ import { useState, useEffect } from 'react';
 
 import { provisionMockList } from './MockProvision';
 import { commmonButtons, commonProgress,  } from './CommonCode'; // commonRows
+import { IMyProgress } from './IMyProgress';
 
 require ('./MockApply.css');
-
-export interface IMyProgress {
-  // [key: string]: string | boolean | number | undefined;
-    time: string;
-    logLabel: string;
-    label: string;
-    rowLabel: string;
-    description: string;
-    current: number;
-    ofThese: number;
-    percentComplete?: number;
-    progressHidden?: boolean;
-    array: string;
-    icon?: string;
-    color?: string;
-    ref?: string;
-    refElement?: any;
-  }
-
 
 export interface IMockApplyHookProps {
 
@@ -89,14 +71,15 @@ const MockApplyHookWorksFull: React.FC<IMockApplyHookProps> = ( props ) => {
 
   const applyThisTemplate = async (): Promise<void> => {
     setStatus( 'Starting' );
+    setFieldsX( [] );
     setViewsX( [] );
     setItemsX( [] );
-    setFieldsX( [] );
     const listCreated: IMyProgress[][] = await provisionMockList( setProgressX, markComplete , );
     console.log( `applyThisTemplate Finish: `, listCreated );
     setStatus( 'Finished' );
   };
 
+  console.log( 'before fieldsX:', fieldsX );
   const CurrentProgress = commonProgress( progressX );
 
   const FieldsPane: JSX.Element = <div>
@@ -106,6 +89,7 @@ const MockApplyHookWorksFull: React.FC<IMockApplyHookProps> = ( props ) => {
     }) }
   </div>;
 
+  console.log( 'before viewsX:', viewsX );
   const ViewsPane: JSX.Element = <div>
     <h3>Views Status:</h3>
     { viewsX.map( ( item: IMyProgress ) => {
@@ -113,6 +97,7 @@ const MockApplyHookWorksFull: React.FC<IMockApplyHookProps> = ( props ) => {
     }) }
   </div>;
 
+  console.log( 'before itemsX:', itemsX );
   const ItemsPane: JSX.Element = <div>
     <h3>Items Status: </h3>
     { itemsX.map( ( item: IMyProgress ) => {
